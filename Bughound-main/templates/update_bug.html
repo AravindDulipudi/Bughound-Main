@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Dashboard</title>
+    <link href="{{url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
+  </head>
+  <body>
+    {% include "header.html" %}
+    <div class="container">
+      <div class="well text-center">
+        <h1>Manage Bug</h1>
+      </div>
+    </div>
+
+    <!-- Flash messages -->
+    <div class="container">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-success alert-dismissable" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <div class="row">
+        <div class="col md-12">
+          <h3>Bug List</h3>
+          <table class="table table-striped">
+            <tr>
+              <th scope="col">Bug Id</th>
+              <th scope="col">Program</th>
+              <th scope="col">Summary</th>
+              <th scope="col">Operations</th>
+            </tr>
+
+            {% for row in bugs %}
+              <tr>
+                <td>{{ row['bug_id'] }}</td>
+                <td>{{ row['program'] }}</td>
+                <td>{{ row['problem_summary'] }}</td>
+                <td>
+                  <a href="#modaledit{{ row['bug_id'] }}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{ row['bug_id'] }}">Edit</a>
+                  <a href="/delete_bug/{{ row['bug_id'] }}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure For Delete?')">Delete</a>
+                  <!-- Download buttons -->
+                  <a href="{{ url_for('download_bug_pdf', bug_id=row['bug_id']) }}" class="btn btn-info btn-xs">PDF</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- The rest of your modals and other HTML content... -->
+
+    <script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+  </body>
+</html>
